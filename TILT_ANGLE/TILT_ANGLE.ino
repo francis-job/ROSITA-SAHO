@@ -43,6 +43,14 @@ Serial.println(y);
  
 Serial.print("AngleZ= ");
 Serial.println(z);
+if((y>=45) && (y<=90))
+   {
+     Serial.println("ELEVATION_DETECTED");
+   }
+if((y>= 270) && (y <= 359))
+   {
+     Serial.println("DEMOTION_DETECTED");
+   }
 Serial.println("-----------------------------------------");
-delay(2000);
+delay(1000);
 }
