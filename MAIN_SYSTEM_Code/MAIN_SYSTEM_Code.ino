@@ -81,7 +81,12 @@ void setup()
         analogWrite(pwm2,throttle_out - Lim_value);
         Serial.println("LIMITED_VALUE_REACHED");
       }
-      else if( PROTOCOL_SWITCH_STATE == HIGH && voltage <= 3.5) // when the throttle input is less than the threshold the system will pass the exact values
+      else if( PROTOCOL_SWITCH_STATE == LOW && voltage <= 3.5) // when the throttle input is less than the threshold the system will pass the exact values
+      {
+        analogWrite(pwm1,throttle_out );
+        analogWrite(pwm2,throttle_out );
+      }
+       else if( PROTOCOL_SWITCH_STATE == HIGH) // when the throttle input is less than the threshold the system will pass the exact values
       {
         analogWrite(pwm1,throttle_out );
         analogWrite(pwm2,throttle_out );
