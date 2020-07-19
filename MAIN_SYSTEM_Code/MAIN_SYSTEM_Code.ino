@@ -16,7 +16,7 @@ int pwm1 = PA6;
 int pwm2 = PC7;
 const int throttle_in = PA0; //Throttle input is connected to the Analog pin PA0
 //defining variables required for the throttle voltage calculation
-int throttle_value= 0;  
+int throttle_value= 0;
 int throttle_out = 0;
 //variables for the Rotary encoder
 int counter = 0;
@@ -24,7 +24,7 @@ int currentStateCLK;
 int lastStateCLK;
 String currentDir =""; //defining a string to print the direction of Rotation
 
-#define PROTOCOL_SWITCH PA8 // pin defined for toggle between protocols
+#define PROTOCOL_SWITCH PA8 // pin defined for toggle between protocols (pa8= protocol switch)
 int PROTOCOL_SWITCH_STATE = 0; //current status of the protocol toggling switch
 //variables defining for calculating the exceeding voltage value
 int Lim_value = 0; 
@@ -40,9 +40,9 @@ void setup()
   pinMode(DT,INPUT);
   lastStateCLK = digitalRead(CLK);// Read the initial state of CLK
   //defining the protocol switch in setup
-  pinMode(PROTOCOL_SWITCH,INPUT); 
+  pinMode(PROTOCOL_SWITCH,INPUT); // defining mode of use of pin
   PROTOCOL_SWITCH_STATE = digitalRead(PROTOCOL_SWITCH); // reading the current state of the switch
-  delay(1000);
+  delay(1000);//1sec
   
   if(PROTOCOL_SWITCH_STATE == 1)
   {
@@ -68,7 +68,7 @@ void setup()
      
      //throttle monitoring and regulating code
      throttle_value =  analogRead(throttle_in); // reading the analog input value from the throttle input
-     throttle_out = map(throttle_value, 0, 1023, 0, 65535); //mapping the 10 bit ADC value to a 16 value 
+     throttle_out = map(throttle_value, 0, 1023, 0, 65535); //mapping the 10 bit ADC value to a 16 bit value for accurate pwm generation.(16 bit timer is available in ARM)
      float voltage =  throttle_value * (5.0 / 1023.0); //converting the 10 bit value to the corresponding voltage value between 0 - 5V
      
      if( PROTOCOL_SWITCH_STATE ==LOW && voltage >=3.5)//if the throttle input value exceeds max. speed then we have to limit the speed corresponding to 3.5V
