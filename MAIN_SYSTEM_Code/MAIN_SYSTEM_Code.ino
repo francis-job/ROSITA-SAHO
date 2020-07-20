@@ -1,12 +1,12 @@
 #include<Wire.h> //library for I2C communication
-const int MPU_addr=0x68; // initialising the a unique 7-bit address of I2C slave MPU6050
+const int MPU_addr=0x68; // initialising the a unique 7-bit address of I2C slave MPU6050(slave address-low address of pin)
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;//acclero and gyro values
 //boundary condition for the  accelerometer Reading 
 int minVal=265; // minimum value set for the accelerometer reading
 int maxVal=402; // maximum value set for the accelerometer readiing
 // defining the x , y , and z axis in the double floating type because it acquire continuous values with doube precision as compared to float.
 double x;     
-double y;
+double y;//for converting to degree
 double z;
 // defining pins for rotary encoder
 #define CLK PB6
@@ -54,18 +54,15 @@ void setup()
   }
 
   Wire.begin(); // initialising the I2C communication
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x6B);
+  Wire.beginTransmission(MPU_addr);//selecting address and establishing transmission
+  Wire.write(0x6B);//master to slave
   Wire.write(0);
   Wire.endTransmission(true);
   
   }
   
   void loop()
-  {
-    // Read the current state of CLK
-     currentStateCLK = digitalRead(CLK);
-     
+  { 
      //throttle monitoring and regulating code
      throttle_value =  analogRead(throttle_in); // reading the analog input value from the throttle input
      throttle_out = map(throttle_value, 0, 1023, 0, 65535); //mapping the 10 bit ADC value to a 16 bit value for accurate pwm generation.(16 bit timer is available in ARM)
@@ -97,7 +94,8 @@ void setup()
      Serial.println("PWM_OUT_VALUE=") ;
      Serial.print(throttle_value);
 
-     
+      // Read the current state of CLK
+     currentStateCLK = digitalRead(CLK);
      // If last and current state of CLK are different, then pulse occurred
   // React to only 1 state change to avoid double count
    if (currentStateCLK != lastStateCLK  && currentStateCLK == 1)
@@ -133,7 +131,7 @@ void setup()
    delay(10);
    Wire.beginTransmission(MPU_addr);//Initiate the Wire library and join the I2C bus as a master or slave
    Wire.write(0x3B);//mpu6050 slave gives the accelrometer reading from the 3B register onwards 
-   Wire.endTransmission(false); //end transmission false state will send a restart, keeping the connection active
+   Wire.endTransmission(false); //for avoiding multiple master interpretation.connection establishment over.end transmission false state will send a restart, keeping the connection active
    Wire.requestFrom(MPU_addr,14,true);//true state will send a stop message after the request, releasing the I2C bus
    //after acquiring the byte values
    //16 bit values are read as two 8 bit higher and lower bits 
