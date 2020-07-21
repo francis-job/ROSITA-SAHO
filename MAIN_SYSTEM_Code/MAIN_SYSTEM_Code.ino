@@ -68,9 +68,9 @@ void setup()
      throttle_out = map(throttle_value, 0, 1023, 0, 65535); //mapping the 10 bit ADC value to a 16 bit value for accurate pwm generation.(16 bit timer is available in ARM)
      float voltage =  throttle_value * (5.0 / 1023.0); //converting the 10 bit value to the corresponding voltage value between 0 - 5V
      
-     if( PROTOCOL_SWITCH_STATE ==LOW && voltage >=3.5)//if the throttle input value exceeds max. speed then we have to limit the speed corresponding to 3.5V
+     if( PROTOCOL_SWITCH_STATE ==LOW && voltage >=2.5)//if the throttle input value exceeds max. speed then we have to limit the speed corresponding to 2.5V
        {
-        Lim_value = voltage-3.5; // additional voltage is substracted from the threshold
+        Lim_value = voltage-2.5; // additional voltage is substracted from the threshold
         Lim_value_bit=map(Lim_value*1023/5,0,1023,0,65535);// the additiona value is mapped to its corresponding bit value
         
       //the corrected value is given as the pwm out
@@ -78,7 +78,7 @@ void setup()
         analogWrite(pwm2,throttle_out - Lim_value);
         Serial.println("LIMITED_VALUE_REACHED");
       }
-      else if( PROTOCOL_SWITCH_STATE == LOW && voltage <= 3.5) // when the throttle input is less than the threshold the system will pass the exact values
+      else if( PROTOCOL_SWITCH_STATE == LOW && voltage <= 2.5) // when the throttle input is less than the threshold the system will pass the exact values
       {
         analogWrite(pwm1,throttle_out );
         analogWrite(pwm2,throttle_out );
