@@ -145,10 +145,9 @@ void setup()
    int zAng = map(AcZ,minVal,maxVal,-90,90);
    
    //angle in radians are converted to degrees
-   x= RAD_TO_DEG * (atan2(-yAng, -zAng)+PI);
-   y= RAD_TO_DEG * (atan2(-xAng, -zAng)+PI);
-   z= RAD_TO_DEG * (atan2(-yAng, -xAng)+PI);
-
+   x= xAng * (180/PI);
+   y= yAng * (180/PI);
+   z= zAng * (180/PI);
   //printing all the X Y Z angle values in degrees
    Serial.print("AngleX= ");
    Serial.println(x);
@@ -160,11 +159,11 @@ void setup()
    Serial.println(z);
 
    // From these values the movement in Y direction is measured
-   if((y>=45) && (y<=90))//if the y angle value is between 45deg and 90 deg it is considered as elevation.
+   if((y>=15) && (y<=45))//if the y angle value is between 45deg and 90 deg it is considered as elevation.
    {
      Serial.println("ELEVATION_DETECTED");
    }
-   if((y>=270) && (y<=359))//if the y angle value is between 270deg and 359 deg it is considered as demotion. 
+   if((y<=345) && (y>=315))//if the y angle value is between 270deg and 359 deg it is considered as demotion. 
    {
      Serial.println("DEMOTION_DETECTED");
    }
